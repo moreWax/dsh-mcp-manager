@@ -18,10 +18,22 @@ like the server settings in the Codex and Claude Code desktop apps.
 
 ## Transport
 
-Both transports target the **modern MCP protocol**:
+Both transports target the **current MCP protocol**:
 
-- `stdio` — local process, unchanged.
-- `streamable-http` — the Streamable HTTP transport from the 2025-03-26+ spec (via the current `@modelcontextprotocol/sdk`). Stateless servers are supported natively: when a server doesn't assign a session id, the client automatically operates without one — pure request/response. Session-based servers still work; the client follows the server's lead. The deprecated HTTP+SSE transport is not used anywhere.
+- `stdio` — local process, unchanged across spec revisions.
+- `streamable-http` — the Streamable HTTP transport. The MCP **2026-07-28
+  specification** made the protocol core **stateless**: no `initialize`
+  handshake, no `Mcp-Session-Id` header, every request self-describing with
+  `Mcp-Method`/`Mcp-Name` headers, plus MRTR (multi round-trip requests) for
+  mid-call input and cacheable `tools/list` results. The v2 TypeScript SDK
+  (`@modelcontextprotocol/client@2.x`) implements it natively, with era
+  negotiation so modern clients still work with 2025-era servers (and vice
+  versa) during the spec's twelve-month deprecation windows.
+
+Server-side spec support is a property of the MCP server you connect to and
+the `dsh-mcp-client` host package — this plugin only writes the connection
+row; it carries no protocol code of its own. The deprecated HTTP+SSE
+transport is not used anywhere.
 
 ## Security model
 
