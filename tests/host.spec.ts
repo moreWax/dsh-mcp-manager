@@ -108,6 +108,44 @@ describe('McpManagerHost.listServers / removeServer', () => {
     expect(stored.get('MCP_TWO_KEY')).toBe(undefined)  // never had one
   })
 
+  it('uses the selected profile and preserves surrounding patch rows on removal', async () => {
+    process.env.DSH_PROFILE = 'work'
+    const path = join(home, 'profiles', 'work', 'cordis.patch.yml')
+    await mkdir(join(home, 'profiles', 'work'), { recursive: true })
+    await writeFile(path, [
+      '# work profile',
+      '- insert:',
+      '    - id: before',
+      '- id: mcp-target',
+      "  name: '@morewax/dsh-mcp-client'",
+      '  config:',
+      '    serverName: target',
+      '    transport: stdio',
+      '    command: target-command',
+      '- insert:',
+      '    - id: after',
+      '',
+    ].join('\n'), 'utf8')
+
+    const host = new McpManagerHost(ctx)
+    expect(await host.listServers()).toEqual(['target'])
+    expect(await host.removeServer('target')).toEqual({ ok: true })
+    const updated = await readFile(path, 'utf8')
+    expect(updated).toContain('- insert:\n    - id: before')
+    expect(updated).toContain('- insert:\n    - id: after')
+    expect(updated).not.toContain('mcp-target')
+  })
+
+  it('ignores credential cleanup failures after the profile row is removed', async () => {
+    const host = new McpManagerHost(ctx)
+    await host.addServer({ serverName: 'fragile', transport: 'stdio', command: 'x' })
+    ;(ctx.credentials as unknown as { unset: (ref: string) => Promise<void> }).unset = async () => {
+      throw new Error('credential backend unavailable')
+    }
+    expect(await host.removeServer('fragile')).toEqual({ ok: true })
+    expect(await host.listServers()).toEqual([])
+  })
+
   it('removing an absent server reports an error', async () => {
     const host = new McpManagerHost(ctx)
     expect(await host.removeServer('ghost')).toMatchObject({ ok: false })

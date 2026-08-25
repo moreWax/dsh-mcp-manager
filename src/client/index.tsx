@@ -5,21 +5,15 @@
  */
 import { useCallback, useEffect, useState } from 'react'
 import type { Context } from '@deepseek-ai/cordis'
+import type { AddServerRequest, McpTransport } from '../types.js'
 
 export interface McpManagerClientApi {
-  addServer(req: {
-    serverName: string
-    transport: 'stdio' | 'streamable-http'
-    command?: string
-    args?: string[]
-    url?: string
-    apiKey?: string
-  }): Promise<{ ok: true; envVar: string } | { ok: false; error: string }>
+  addServer(req: AddServerRequest): Promise<{ ok: true; envVar: string } | { ok: false; error: string }>
   listServers(): Promise<string[]>
   removeServer(name: string): Promise<{ ok: true } | { ok: false; error: string }>
 }
 
-type Transport = 'stdio' | 'streamable-http'
+type Transport = McpTransport
 
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '8px 12px', marginBottom: 12,

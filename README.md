@@ -1,7 +1,12 @@
 # dsh-mcp-manager
 
-**Add MCP servers from the harness UI** — a `+` button beside the composer,
-like the server settings in the Codex and Claude Code desktop apps.
+**MCP server profile-management building blocks.** The host logic can add, list,
+and remove server rows while keeping API keys in the managed credential store.
+
+> **Integration status:** the exported host and client `apply()` functions do not
+> register an RPC surface or mount the button yet. Installing this package therefore
+> does **not** currently make the pictured UI functional. The diagram below describes
+> the intended experience once those runtime integration APIs are wired.
 
 ```
 ┌──────────────────────────────────────────┐
@@ -12,8 +17,8 @@ like the server settings in the Codex and Claude Code desktop apps.
       ↓ Add
   key → managed credential store (never in config)
   row → profile cordis.patch.yml (reference only)
-      ↓ HMR
-  server connects live; tools appear next message
+      ↓ runtime integration (not implemented)
+  server reconnect would expose tools
 ```
 
 ## Transport
@@ -44,8 +49,6 @@ HTTP+SSE transport is not used anywhere.
   (`process.env.MCP_GITHUB_KEY`). The profile YAML stays safe to commit, sync,
   and render — this is dsh's own doctrine, verbatim.
 - **Removing a server unsets its credential.**
-- **Per-request resolution**: because `ctx.credentials.resolve` runs per
-  operation, rotating a key takes effect on the next request with no restart.
 
 ## Install
 
