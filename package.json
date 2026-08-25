@@ -54,5 +54,8 @@
     "dsh-plugin",
     "mcp",
     "ui"
-  ]
+  ],
+  "engines": {
+    "node": ">=22"
+  }
 }
