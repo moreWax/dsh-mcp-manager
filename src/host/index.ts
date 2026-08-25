@@ -97,6 +97,8 @@ export class McpAddHost {
       `    serverName: ${r.serverName}`,
       `    transport: streamable-http`,
       `    url: ${r.url}`,
+      `    # streamable-http is the modern MCP transport (2025-03-26+ spec):`,
+      `    # stateless servers are supported natively — no session needed.`,
       envBlock.trimEnd(),
     ].join('\n')
   }

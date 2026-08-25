@@ -16,6 +16,13 @@ like the server settings in the Codex and Claude Code desktop apps.
   server connects live; tools appear next message
 ```
 
+## Transport
+
+Both transports target the **modern MCP protocol**:
+
+- `stdio` — local process, unchanged.
+- `streamable-http` — the Streamable HTTP transport from the 2025-03-26+ spec (via the current `@modelcontextprotocol/sdk`). Stateless servers are supported natively: when a server doesn't assign a session id, the client automatically operates without one — pure request/response. Session-based servers still work; the client follows the server's lead. The deprecated HTTP+SSE transport is not used anywhere.
+
 ## Security model
 
 - **Secrets never touch config files.** The API key is written to dsh's
