@@ -1,4 +1,4 @@
-# dsh-mcp-add
+# dsh-mcp-manager
 
 **Add MCP servers from the harness UI** — a `+` button beside the composer,
 like the server settings in the Codex and Claude Code desktop apps.
@@ -50,7 +50,7 @@ HTTP+SSE transport is not used anywhere.
 ## Install
 
 ```sh
-dsh plugin --profile default add github:moreWax/dsh-mcp-add
+dsh plugin --profile default add github:moreWax/dsh-mcp-manager
 ```
 
 ## Development

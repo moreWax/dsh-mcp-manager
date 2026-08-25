@@ -25,7 +25,7 @@ export interface AddServerRequest {
 /** Valid names become part of tool names: mcp__<serverName>__<tool>. */
 const NAME_RE = /^[A-Za-z0-9_-]{1,32}$/
 
-export class McpAddHost {
+export class McpManagerHost {
   constructor(private readonly ctx: Context) {}
 
   /** $DSH_HOME — matches dsh's convention with a sane default. */
@@ -135,11 +135,11 @@ export class McpAddHost {
   }
 }
 
-export const name = 'mcp-add-host'
+export const name = 'mcp-manager-host'
 export const inject = ['credentials'] as const
 
 export function apply(ctx: Context): void {
-  const host = new McpAddHost(ctx)
+  const host = new McpManagerHost(ctx)
   // host RPC surface — the browser client calls these through the api channel
   void host
   void resolve

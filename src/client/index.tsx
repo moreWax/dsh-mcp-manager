@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Context } from '@deepseek-ai/cordis'
 
-export interface McpAddClientApi {
+export interface McpManagerClientApi {
   addServer(req: {
     serverName: string
     transport: 'stdio' | 'streamable-http'
@@ -32,7 +32,7 @@ const buttonStyle: React.CSSProperties = {
   background: 'var(--accent, #4a9)', color: '#fff', fontSize: 14, fontWeight: 500,
 }
 
-export function AddServerModal({ api, onClose }: { api: McpAddClientApi; onClose: () => void }) {
+export function AddServerModal({ api, onClose }: { api: McpManagerClientApi; onClose: () => void }) {
   const [name, setName] = useState('')
   const [transport, setTransport] = useState<Transport>('stdio')
   const [command, setCommand] = useState('')
@@ -112,7 +112,7 @@ export function AddServerModal({ api, onClose }: { api: McpAddClientApi; onClose
 }
 
 /** The toolbar button that opens the modal. */
-export function McpAddButton({ api }: { api: McpAddClientApi }) {
+export function McpManagerButton({ api }: { api: McpManagerClientApi }) {
   const [open, setOpen] = useState(false)
   const plusButton: React.CSSProperties = {
     border: 'none', background: 'transparent', cursor: 'pointer', color: 'inherit',
@@ -127,7 +127,7 @@ export function McpAddButton({ api }: { api: McpAddClientApi }) {
 }
 
 /** Convenience hook: modal state driven by the host api. */
-export function useMcpServers(api: McpAddClientApi): string[] {
+export function useMcpServers(api: McpManagerClientApi): string[] {
   const [servers, setServers] = useState<string[]>([])
   useEffect(() => {
     void api.listServers().then(setServers)
@@ -135,7 +135,7 @@ export function useMcpServers(api: McpAddClientApi): string[] {
   return servers
 }
 
-export const name = 'mcp-add-client'
+export const name = 'mcp-manager-client'
 export const inject = [] as const
 
 // Plugin body — mounts the button into the composer toolbar slot when the

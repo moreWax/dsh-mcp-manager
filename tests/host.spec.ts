@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { McpAddHost } from '../src/host/index.js'
+import { McpManagerHost } from '../src/host/index.js'
 
 let home: string
 let ctx: Context
@@ -37,9 +37,9 @@ afterEach(() => {
   delete process.env.DSH_PROFILE
 })
 
-describe('McpAddHost.addServer', () => {
+describe('McpManagerHost.addServer', () => {
   it('writes a stdio row referencing the credential store, never the value', async () => {
-    const host = new McpAddHost(ctx)
+    const host = new McpManagerHost(ctx)
     const result = await host.addServer({
       serverName: 'github', transport: 'stdio',
       command: 'npx', args: ['-y', '@modelcontextprotocol/server-github'],
@@ -59,7 +59,7 @@ describe('McpAddHost.addServer', () => {
   })
 
   it('stores the key in the credential store', async () => {
-    const host = new McpAddHost(ctx)
+    const host = new McpManagerHost(ctx)
     await host.addServer({
       serverName: 'linear', transport: 'stdio', command: 'npx', apiKey: 'lin_api_secret',
     })
@@ -67,7 +67,7 @@ describe('McpAddHost.addServer', () => {
   })
 
   it('writes an http row with a bearer header reference', async () => {
-    const host = new McpAddHost(ctx)
+    const host = new McpManagerHost(ctx)
     const result = await host.addServer({
       serverName: 'web', transport: 'streamable-http', url: 'http://localhost:3000/mcp',
       apiKey: 'tok-abc',
@@ -80,23 +80,23 @@ describe('McpAddHost.addServer', () => {
   })
 
   it('rejects duplicate server ids', async () => {
-    const host = new McpAddHost(ctx)
+    const host = new McpManagerHost(ctx)
     await host.addServer({ serverName: 'dup', transport: 'stdio', command: 'x' })
     const again = await host.addServer({ serverName: 'dup', transport: 'stdio', command: 'x' })
     expect(again).toMatchObject({ ok: false })
   })
 
   it('rejects invalid names and missing required fields', async () => {
-    const host = new McpAddHost(ctx)
+    const host = new McpManagerHost(ctx)
     expect(await host.addServer({ serverName: 'bad name!', transport: 'stdio', command: 'x' })).toMatchObject({ ok: false })
     expect(await host.addServer({ serverName: 'ok', transport: 'stdio' })).toMatchObject({ ok: false })
     expect(await host.addServer({ serverName: 'ok', transport: 'streamable-http', url: 'not-a-url' })).toMatchObject({ ok: false })
   })
 })
 
-describe('McpAddHost.listServers / removeServer', () => {
+describe('McpManagerHost.listServers / removeServer', () => {
   it('round-trips add → list → remove, cleaning the credential', async () => {
-    const host = new McpAddHost(ctx)
+    const host = new McpManagerHost(ctx)
     await host.addServer({ serverName: 'one', transport: 'stdio', command: 'a', apiKey: 'k1' })
     await host.addServer({ serverName: 'two', transport: 'stdio', command: 'b' })
     expect(await host.listServers()).toEqual(['one', 'two'])
@@ -109,7 +109,7 @@ describe('McpAddHost.listServers / removeServer', () => {
   })
 
   it('removing an absent server reports an error', async () => {
-    const host = new McpAddHost(ctx)
+    const host = new McpManagerHost(ctx)
     expect(await host.removeServer('ghost')).toMatchObject({ ok: false })
   })
 })

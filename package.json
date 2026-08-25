@@ -1,11 +1,11 @@
 {
-  "name": "@morewax/dsh-mcp-add",
+  "name": "@morewax/dsh-mcp-manager",
   "description": "Add MCP servers from the harness UI — a + button by the composer with secure key storage",
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
   "publishConfig": { "access": "public" },
-  "repository": { "type": "git", "url": "git+https://github.com/moreWax/dsh-mcp-add.git" },
+  "repository": { "type": "git", "url": "git+https://github.com/moreWax/dsh-mcp-manager.git" },
   "main": "lib/host/index.mjs",
   "types": "lib/host/index.d.mts",
   "exports": {
