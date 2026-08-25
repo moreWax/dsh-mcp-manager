@@ -1,5 +1,5 @@
 # dsh-mcp-manager: a + button by the composer for adding MCP servers with
 # secure key storage. Host side mounts the RPC; the client side ships in
 # the browser bundle (./client export).
-- id: mcp-add
+- id: mcp-manager
   name: '@morewax/dsh-mcp-manager'
