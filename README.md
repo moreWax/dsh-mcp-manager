@@ -3,10 +3,8 @@
 **MCP server profile-management building blocks.** The host logic can add, list,
 and remove server rows while keeping API keys in the managed credential store.
 
-> **Integration status:** the exported host and client `apply()` functions do not
-> register an RPC surface or mount the button yet. Installing this package therefore
-> does **not** currently make the pictured UI functional. The diagram below describes
-> the intended experience once those runtime integration APIs are wired.
+The host registers a Typert Remote service and the browser client mounts its
+Remote contribution before placing the button in `conversation.input.left`.
 
 ```
 ┌──────────────────────────────────────────┐
@@ -17,8 +15,8 @@ and remove server rows while keeping API keys in the managed credential store.
       ↓ Add
   key → managed credential store (never in config)
   row → profile cordis.patch.yml (reference only)
-      ↓ runtime integration (not implemented)
-  server reconnect would expose tools
+      ↓ profile reload
+  server connection row becomes available
 ```
 
 ## Transport

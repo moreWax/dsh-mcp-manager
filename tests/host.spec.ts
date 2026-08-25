@@ -84,6 +84,7 @@ describe('McpManagerHost.addServer', () => {
     await host.addServer({ serverName: 'dup', transport: 'stdio', command: 'x' })
     const again = await host.addServer({ serverName: 'dup', transport: 'stdio', command: 'x' })
     expect(again).toMatchObject({ ok: false })
+    expect(stored.has('MCP_DUP_KEY')).toBe(false)
   })
 
   it('rejects invalid names and missing required fields', async () => {

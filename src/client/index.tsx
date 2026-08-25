@@ -5,6 +5,11 @@
  */
 import { useCallback, useEffect, useState } from 'react'
 import type { Context } from '@deepseek-ai/cordis'
+import remoteContribution from '../remote.js'
+import type {} from '@deepseek-ai/dsh-api-gateway/client'
+import type {} from '@deepseek-ai/dsh-client-ui-slots'
+import type {} from '@deepseek-ai/dsh-client-runtime/client'
+import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
 import type { AddServerRequest, McpTransport } from '../types.js'
 
 export interface McpManagerClientApi {
@@ -129,12 +134,36 @@ export function useMcpServers(api: McpManagerClientApi): string[] {
   return servers
 }
 
+export function createMcpManagerClientApi(ctx: Context): McpManagerClientApi {
+  return {
+    async addServer(request) {
+      const response = await ctx.remote.mcpManager.addServer(request)
+      return response.ok ? response.value : { ok: false, error: response.error.message }
+    },
+    async listServers() {
+      const response = await ctx.remote.mcpManager.listServers()
+      if (!response.ok) throw new Error(response.error.message)
+      return response.value
+    },
+    async removeServer(serverName) {
+      const response = await ctx.remote.mcpManager.removeServer(serverName)
+      return response.ok ? response.value : { ok: false, error: response.error.message }
+    },
+  }
+}
+
 export const name = 'mcp-manager-client'
-export const inject = [] as const
+export const inject = ['slots', 'remote'] as const
 
 // Plugin body — mounts the button into the composer toolbar slot when the
 // client runtime loads it. Slot registration follows the ui-conversation
 // pattern (conversation.input.toolbar).
-export function apply(ctx: Context): void {
-  void ctx
+export async function apply(ctx: Context): Promise<() => Promise<void>> {
+  const disposeRemote = await ctx.remote.$mount(remoteContribution)
+  const api = createMcpManagerClientApi(ctx)
+  ctx.slots.inject('conversation.input.left', () => ctx.slots.register(
+    { name: 'conversation.input.left', id: 'mcp-manager', order: 100, label: 'Add MCP server' },
+    () => <McpManagerButton api={api} />,
+  ))
+  return disposeRemote
 }
