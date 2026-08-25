@@ -30,10 +30,11 @@ Both transports target the **current MCP protocol**:
   negotiation so modern clients still work with 2025-era servers (and vice
   versa) during the spec's twelve-month deprecation windows.
 
-Server-side spec support is a property of the MCP server you connect to and
-the `dsh-mcp-client` host package — this plugin only writes the connection
-row; it carries no protocol code of its own. The deprecated HTTP+SSE
-transport is not used anywhere.
+Generated rows name **`@morewax/dsh-mcp-client`** — our drop-in client built
+on the v2 SDK that speaks the 2026-07-28 stateless protocol natively (with
+automatic era fallback to 2025-era servers). This plugin only writes the
+connection row; the protocol code lives in that package. The deprecated
+HTTP+SSE transport is not used anywhere.
 
 ## Security model
 

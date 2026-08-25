@@ -49,7 +49,7 @@ describe('McpAddHost.addServer', () => {
 
     const yaml = await readFile(join(home, 'profiles', 'default', 'cordis.patch.yml'), 'utf8')
     expect(yaml).toContain('- id: mcp-github')
-    expect(yaml).toContain("name: '@deepseek-ai/dsh-mcp-client'")
+    expect(yaml).toContain("name: '@morewax/dsh-mcp-client'")
     expect(yaml).toContain('serverName: github')
     expect(yaml).toContain('command: npx')
     // THE security property: the secret value NEVER appears in the config

@@ -72,7 +72,7 @@ export class McpAddHost {
     return { ok: true, envVar }
   }
 
-  /** Render one dsh-mcp-client row. The key travels by env reference only. */
+  /** Render one @morewax/dsh-mcp-client row. The key travels by env reference only. */
   private renderRow(r: AddServerRequest, envVar: string): string {
     const envBlock = r.transport === 'stdio'
       ? `        env:\n          API_KEY: !!js process.env.${envVar} || ''\n`
@@ -81,7 +81,7 @@ export class McpAddHost {
       const args = (r.args ?? []).map((a) => `'${a.replaceAll("'", "'\\''")}'`).join(', ')
       return [
         `- id: mcp-${r.serverName}`,
-        `  name: '@deepseek-ai/dsh-mcp-client'`,
+        `  name: '@morewax/dsh-mcp-client'`,
         `  config:`,
         `    serverName: ${r.serverName}`,
         `    transport: stdio`,
@@ -92,7 +92,7 @@ export class McpAddHost {
     }
     return [
       `- id: mcp-${r.serverName}`,
-      `  name: '@deepseek-ai/dsh-mcp-client'`,
+      `  name: '@morewax/dsh-mcp-client'`,
       `  config:`,
       `    serverName: ${r.serverName}`,
       `    transport: streamable-http`,
